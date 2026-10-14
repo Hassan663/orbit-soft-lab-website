@@ -1,0 +1,639 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --body-color: rgba(254, 254, 254, 0.7);
+  --lime: #b2ec36;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink text-white font-body antialiased;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1292px] px-5 sm:px-8;
+  }
+
+  /* no backdrop-blur: a slightly more opaque fill gives the same look without the paint cost */
+  .glass {
+    @apply border border-lime/25 bg-[rgba(11,21,16,0.72)] shadow-glass;
+  }
+
+  .btn-primary {
+    @apply relative isolate inline-flex h-[52px] items-center justify-center gap-2.5 overflow-hidden rounded-full bg-lime px-8 font-semibold text-ink transition-[box-shadow,color] duration-300 hover:shadow-[0_0_48px_rgba(178,236,54,0.4)];
+  }
+
+  .btn-outline {
+    @apply relative isolate inline-flex h-[52px] items-center justify-center gap-2.5 overflow-hidden rounded-full border border-lime-dark bg-ink px-8 font-semibold text-body transition-[box-shadow,color,border-color] duration-300 hover:border-lime hover:text-white hover:shadow-lime;
+  }
+
+  .btn-small {
+    @apply relative isolate inline-flex items-center gap-2 overflow-hidden rounded-full border border-lime/60 bg-ink/70 px-4 py-1.5 text-[13px] font-medium text-white transition-[box-shadow,color,transform] duration-300 hover:text-ink hover:shadow-lime;
+  }
+
+  /* background sweep from the left */
+  .btn-primary::before,
+  .btn-outline::before,
+  .btn-small::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-primary::before {
+    background: #72cd32;
+  }
+  .btn-outline::before {
+    background: rgba(178, 236, 54, 0.12);
+  }
+  .btn-small::before {
+    background: #b2ec36;
+  }
+  .btn-primary:hover::before,
+  .btn-outline:hover::before,
+  .btn-small:hover::before,
+  .btn-primary:focus-visible::before,
+  .btn-outline:focus-visible::before,
+  .btn-small:focus-visible::before {
+    transform: scaleX(1);
+  }
+
+  /* trailing arrow nudges right */
+  .btn-primary > svg:last-child,
+  .btn-outline > svg:last-child,
+  .btn-small > svg:last-child {
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-primary:hover > svg:last-child,
+  .btn-outline:hover > svg:last-child,
+  .btn-small:hover > svg:last-child {
+    transform: translateX(4px);
+  }
+
+  /* nav link: underline grows from the center */
+  .nav-link {
+    @apply relative py-1 text-[16px] font-medium transition-colors duration-300;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 2px;
+    border-radius: 9999px;
+    background: #b2ec36;
+    transform: scaleX(0);
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover::after,
+  .nav-link-active::after {
+    transform: scaleX(1);
+  }
+
+  /* footer link: slides right with a lime dot */
+  .footer-link {
+    @apply inline-flex items-center text-[14px] text-body transition-[color,transform] duration-300 hover:translate-x-1 hover:text-lime;
+  }
+  .footer-link::before {
+    content: "";
+    height: 6px;
+    width: 0;
+    margin-right: 0;
+    border-radius: 9999px;
+    background: #b2ec36;
+    opacity: 0;
+    transition: width 300ms, margin 300ms, opacity 300ms;
+  }
+  .footer-link:hover::before {
+    width: 6px;
+    margin-right: 8px;
+    opacity: 1;
+  }
+
+  .eyebrow {
+    @apply font-body text-[14px] uppercase tracking-[0.08em] text-lime;
+  }
+
+  .card {
+    @apply rounded-[24px] border border-lime/25 bg-ink-card;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(180deg, #72cd32 0%, #b2ec36 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* soft glow blobs used in section backgrounds */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(178, 236, 54, 0.16) 0%, rgba(178, 236, 54, 0) 60%);
+  pointer-events: none;
+}
+
+/* long-form text (blog articles, legal pages) — no typography plugin */
+.prose-dark {
+  color: var(--body-color);
+  font-size: 17px;
+  line-height: 1.8;
+}
+.prose-dark > * + * {
+  margin-top: 1.25em;
+}
+.prose-dark h2 {
+  margin-top: 2em;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #fff;
+}
+.prose-dark h3 {
+  margin-top: 1.6em;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: #fff;
+}
+.prose-dark section > * + * {
+  margin-top: 1em;
+}
+.prose-dark p strong {
+  color: #fff;
+}
+.prose-dark a {
+  color: var(--lime);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-dark ul {
+  padding-left: 0;
+  list-style: none;
+}
+.prose-dark ul li {
+  position: relative;
+  padding-left: 1.6em;
+}
+.prose-dark ul li + li {
+  margin-top: 0.5em;
+}
+.prose-dark ul li::before {
+  content: "";
+  position: absolute;
+  left: 0.3em;
+  top: 0.75em;
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: var(--lime);
+}
+.prose-dark blockquote {
+  border-left: 3px solid var(--lime);
+  border-radius: 0 16px 16px 0;
+  background: rgba(178, 236, 54, 0.06);
+  padding: 1.2em 1.5em;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.6;
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .prose-dark {
+    font-size: 18px;
+  }
+  .prose-dark h2 {
+    font-size: 28px;
+  }
+}
+
+/* ---------- motion helpers ---------- */
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.25);
+    filter: brightness(1.4) drop-shadow(0 0 6px rgba(255, 184, 0, 0.7));
+  }
+}
+.group:hover .twinkle {
+  animation: twinkle 500ms ease-in-out both;
+}
+
+/* logo: orbit ring spins once, dot pulses */
+.logo-ring,
+.logo-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.logo-ring {
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .logo-ring {
+  transform: rotate(360deg);
+}
+@keyframes dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.75;
+  }
+}
+.group:hover .logo-dot {
+  animation: dot-pulse 600ms ease-in-out 2;
+}
+
+/* team photo ring draws around the avatar */
+.ring-draw circle {
+  stroke-dasharray: 358;
+  stroke-dashoffset: 358;
+  transition: stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .ring-draw circle {
+  stroke-dashoffset: 0;
+}
+
+/* custom cursor (CustomCursor.tsx) replaces the native one only on fine pointers */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+.has-custom-cursor input,
+.has-custom-cursor textarea,
+.has-custom-cursor [contenteditable="true"] {
+  cursor: text !important;
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  pointer-events: none;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.cursor-dot {
+  height: 8px;
+  width: 8px;
+  margin: -4px 0 0 -4px;
+  background: #b2ec36;
+}
+.cursor-ring {
+  height: 32px;
+  width: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid rgba(178, 236, 54, 0.7);
+}
+/* inner pseudo element grows, so the ring's own transform stays free for positioning */
+.cursor-ring::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(178, 236, 54, 0.7);
+  background: rgba(178, 236, 54, 0.1);
+  opacity: 0;
+  transform: scale(1);
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), opacity 250ms;
+}
+[data-cursor="on"] .cursor-dot,
+[data-cursor="on"] .cursor-ring,
+[data-cursor="hover"] .cursor-dot,
+[data-cursor="hover"] .cursor-ring {
+  opacity: 1;
+}
+[data-cursor="hover"] .cursor-ring::after {
+  opacity: 1;
+  transform: scale(1.75);
+}
+
+/* contact submit button: stacked labels cross-fade */
+.btn-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(8px);
+  visibility: hidden;
+  transition: opacity 200ms, transform 200ms, visibility 200ms;
+}
+.btn-state.is-active {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.check-draw {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: draw 450ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards;
+}
+
+/* marquee and its loading placeholder share one fixed height (no layout shift) */
+.marquee-box {
+  height: 99px;
+}
+@media (min-width: 640px) {
+  .marquee-box {
+    height: 108px;
+  }
+}
+
+/* skip rendering work for sections until they approach the viewport */
+.cv-auto {
+  content-visibility: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* icon boxes flip on card hover (WhyUs, stats) with a soft overshoot */
+.flip-icon {
+  transition: transform 550ms cubic-bezier(0.34, 1.4, 0.64, 1), background-color 300ms, color 300ms;
+}
+.group:hover .flip-icon {
+  transform: rotateY(180deg);
+}
+.flip-icon > svg {
+  transition: transform 550ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.group:hover .flip-icon > svg {
+  /* keep the icon readable after the flip */
+  transform: rotateY(180deg);
+}
+
+/* ---------- entrance animations (server-rendered markup + one IntersectionObserver) ----------
+   They animate the individual `translate` / `scale` properties, never `transform`, so they compose with
+   Tailwind hover transforms and with the Tilt/Magnetic transforms on the same element. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    translate: var(--from, 0 24px);
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+@keyframes word-in {
+  from {
+    translate: 0 110%;
+  }
+  to {
+    translate: none;
+  }
+}
+@keyframes clip-in {
+  from {
+    clip-path: inset(100% 0% 0% 0% round 30px);
+  }
+  to {
+    clip-path: inset(0% 0% 0% 0% round 30px);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: none;
+  }
+}
+@keyframes draw-x {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: none;
+  }
+}
+@keyframes arc-draw {
+  from {
+    stroke-dashoffset: 300;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes hero-zoom {
+  from {
+    scale: 1.05;
+  }
+  to {
+    scale: none;
+  }
+}
+
+.reveal,
+.stagger > * {
+  opacity: 0;
+}
+.reveal.is-inview,
+.reveal.reveal-load {
+  animation: reveal-in var(--dur, 600ms) var(--ease-out) var(--d, 0ms) both;
+}
+.stagger.is-inview > * {
+  animation: reveal-in 600ms var(--ease-out) var(--d, 0ms) both;
+}
+.stagger.is-inview > :nth-child(2) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 1);
+}
+.stagger.is-inview > :nth-child(3) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 2);
+}
+.stagger.is-inview > :nth-child(4) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 3);
+}
+.stagger.is-inview > :nth-child(5) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 4);
+}
+.stagger.is-inview > :nth-child(6) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 5);
+}
+.stagger.is-inview > :nth-child(7) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 6);
+}
+.stagger.is-inview > :nth-child(8) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 7);
+}
+.stagger.is-inview > :nth-child(9) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 8);
+}
+.stagger.is-inview > :nth-child(10) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 9);
+}
+.stagger.is-inview > :nth-child(11) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 10);
+}
+.stagger.is-inview > :nth-child(12) {
+  animation-delay: calc(var(--d, 0ms) + var(--stagger, 80ms) * 11);
+}
+
+.text-reveal .word {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: bottom;
+}
+.text-reveal .word > span {
+  display: inline-block;
+  translate: 0 110%;
+}
+.text-reveal.is-inview .word > span,
+.text-reveal.reveal-load .word > span {
+  animation: word-in 600ms var(--ease-out) calc(var(--d, 0ms) + var(--w, 0) * 50ms) both;
+}
+
+.clip-reveal {
+  clip-path: inset(100% 0% 0% 0% round 30px);
+}
+.clip-reveal.is-inview {
+  animation: clip-in 600ms var(--ease-out) var(--d, 0ms) both;
+}
+
+.pop-in {
+  opacity: 0;
+}
+.pop-in.is-inview {
+  animation: pop-in 550ms cubic-bezier(0.34, 1.25, 0.64, 1) var(--d, 0ms) both;
+}
+
+.draw-line {
+  transform-origin: left;
+  scale: 0 1;
+}
+.draw-line.is-inview {
+  animation: draw-x 1200ms var(--ease-out) both;
+}
+
+.step-arc {
+  stroke-dashoffset: 300;
+}
+.step-ring.is-inview .step-arc {
+  animation: arc-draw 600ms var(--ease-out) var(--d, 0ms) both;
+}
+
+.hero-zoom {
+  animation: hero-zoom 1600ms var(--ease-out) both;
+}
+
+/* reduced motion: content simply fades in, nothing moves */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .stagger > *,
+  .pop-in {
+    translate: none !important;
+    scale: none !important;
+  }
+  .text-reveal .word > span,
+  .clip-reveal,
+  .draw-line,
+  .step-arc,
+  .hero-zoom {
+    translate: none !important;
+    clip-path: none !important;
+    scale: none !important;
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .reveal.is-inview,
+  .reveal.reveal-load,
+  .stagger.is-inview > *,
+  .pop-in.is-inview {
+    animation-name: fade-in !important;
+    animation-duration: 300ms !important;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tilt.tsx: pointer position arrives as CSS variables */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 450ms var(--ease-out), border-color 300ms, box-shadow 300ms;
+}
+.tilt:hover {
+  transition: transform 120ms ease-out, border-color 300ms, box-shadow 300ms;
+}
+.tilt-glow {
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(178, 236, 54, 0.14), transparent 60%);
+}
+
+/* Magnetic.tsx: follows quickly while hovered, springs back with a soft overshoot */
+.magnetic {
+  transition: transform 500ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.magnetic[data-active] {
+  transition: transform 150ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt {
+    transform: none !important;
+  }
+}
